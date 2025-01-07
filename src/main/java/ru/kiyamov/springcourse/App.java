@@ -5,6 +5,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import ru.kiyamov.springcourse.model.Person;
 
+import java.util.List;
+
 public class App {
     public static void main(String[] args) {
         // читаем конфигурацию из файла hibernate.properties
@@ -15,8 +17,10 @@ public class App {
         try {
             session.beginTransaction();
 
-            Person person = session.get(Person.class, 3);
-            session.delete(person);
+            List<Person> people = session.createQuery("FROM Person WHERE age >= 30").getResultList();
+            for (Person p : people) {
+                System.out.println(p);
+            }
 
             session.getTransaction().commit();
         } finally {
