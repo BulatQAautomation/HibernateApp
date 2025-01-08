@@ -19,27 +19,12 @@ public class App {
         try {
             session.beginTransaction();
 
-            /** - выводим человека и его айтемы
-             Person person = session.get(Person.class, 3);
-             System.out.println(person);
+            Person person = session.get(Person.class, 2);
+            Item newItem = new Item("Item fron Hibernate", person);
 
-             List<Item> itemList = person.getItems();
-             for (Item item : itemList) {
-             System.out.println(item);
-             }
-             */
+            person.getItems().add(newItem); // это строка добавляет обьект для правильного кэширования, но не порождает изменений в бд
 
-//            выводим сначала айтем и из айтема вычленяем человека
-            Item item = session.get(Item.class, 5);
-            System.out.println(item);
-
-            Person person = item.getOwner();
-            System.out.println(person);
-
-//            Person person = session.get(Person.class, 3);
-
-
-
+            session.save(newItem);
             session.getTransaction().commit();
         } finally {
             sessionFactory.close();
