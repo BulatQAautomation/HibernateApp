@@ -24,7 +24,8 @@ public class Person {
     @Column(name = "age")
     private int age;
 
-    @OneToMany(mappedBy = "owner")
+    // при сохранении человека будут сохраняться все связанные с ним товары
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.PERSIST)
     private List<Item> items;
 
     public Person(String name, int age) {

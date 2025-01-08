@@ -6,9 +6,7 @@ import org.hibernate.cfg.Configuration;
 import ru.kiyamov.springcourse.model.Item;
 import ru.kiyamov.springcourse.model.Person;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class App {
     public static void main(String[] args) {
@@ -21,11 +19,12 @@ public class App {
         try {
             session.beginTransaction();
 
-            Person person = session.get(Person.class, 2);
-//          SQL
-            session.remove(person);
-//          было правильное состояние Hibernate кэша
-            person.getItems().forEach(i -> i.setOwner(null));
+            Person person = new Person("Test cascading", 18);
+
+            Item item = new Item("Test cascading item", person);
+            person.setItems(Collections.singletonList(item));
+
+            session.persist(person);
 
             session.getTransaction().commit();
         } finally {
