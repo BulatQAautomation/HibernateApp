@@ -2,39 +2,38 @@ package ru.kiyamov.springcourse.model;
 
 import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
+import java.util.List;
 
 @Setter
 @Getter
 @Entity
 @Table(name = "Person")
-public class Person implements Serializable {
+public class Person {
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "seq_generator_person")
-    @SequenceGenerator(name = "seq_generator_person",
-            sequenceName = "person_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "age")
     private int age;
 
-    @Column(name = "name")
-    private String name;
+    @OneToMany(mappedBy = "owner")
+    private List<Item> items;
 
     public Person(String name, int age) {
         this.age = age;
         this.name = name;
     }
 
-    public Person() {}
+    public Person() {
+    }
 
     @Override
     public String toString() {
