@@ -4,7 +4,9 @@ import javax.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Setter
@@ -24,8 +26,9 @@ public class Person {
     @Column(name = "age")
     private int age;
 
-    // при сохранении человека будут сохраняться все связанные с ним товары
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.PERSIST)
+    // таким образом теперь будет касакадироваться вызов метода save()
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @OneToMany(mappedBy = "owner")
     private List<Item> items;
 
     public Person(String name, int age) {
@@ -34,6 +37,15 @@ public class Person {
     }
 
     public Person() {
+    }
+
+    public void addItem(Item item) {
+        if (this.items == null) {
+            this.items = new ArrayList<>();
+        }
+
+        this.items.add(item);
+        item.setOwner(this);
     }
 
     @Override
