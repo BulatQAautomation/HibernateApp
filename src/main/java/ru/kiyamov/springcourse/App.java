@@ -6,6 +6,8 @@ import org.hibernate.cfg.Configuration;
 import ru.kiyamov.springcourse.model.Item;
 import ru.kiyamov.springcourse.model.Person;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class App {
@@ -19,12 +21,16 @@ public class App {
         try {
             session.beginTransaction();
 
-            Person person = session.get(Person.class, 2);
-            Item newItem = new Item("Item fron Hibernate", person);
+            Person person = session.get(Person.class, 3); // новый динамический лист с одним товаром
 
-            person.getItems().add(newItem); // это строка добавляет обьект для правильного кэширования, но не порождает изменений в бд
+            List<Item> items = person.getItems();
 
-            session.save(newItem);
+            for (Item item : items) {
+                session.remove(item);
+            }
+//            не порождает SQL, но необходимо для того, что бы в кэше все было верно
+            person.getItems().clear();
+
             session.getTransaction().commit();
         } finally {
             sessionFactory.close();
