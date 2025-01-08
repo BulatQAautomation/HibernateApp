@@ -21,15 +21,11 @@ public class App {
         try {
             session.beginTransaction();
 
-            Person person = session.get(Person.class, 3); // новый динамический лист с одним товаром
-
-            List<Item> items = person.getItems();
-
-            for (Item item : items) {
-                session.remove(item);
-            }
-//            не порождает SQL, но необходимо для того, что бы в кэше все было верно
-            person.getItems().clear();
+            Person person = session.get(Person.class, 2);
+//          SQL
+            session.remove(person);
+//          было правильное состояние Hibernate кэша
+            person.getItems().forEach(i -> i.setOwner(null));
 
             session.getTransaction().commit();
         } finally {
